@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { AngularFireModule } from 'angularfire2';
+
 import {
   NgModule,
   ApplicationRef
@@ -24,13 +26,18 @@ import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState, InternalStateType } from './app.service';
-import { HomeComponent } from './home';
-import { AboutComponent } from './about';
-import { NoContentComponent } from './no-content';
-import { XLargeDirective } from './home/x-large';
 
 import '../styles/styles.scss';
 import '../styles/headings.css';
+import { HomeComponent } from './home/home.component';
+import { LoginPageModule } from "./login-page/login-page.module";
+import { AngularFireDatabaseModule } from "angularfire2/database";
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AuthService } from "./core/auth.service";
+import { AuthGuard } from "./core/auth-guard.service";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -47,14 +54,19 @@ type StoreType = {
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
+export const firebaseConfig = {
+  apiKey: "AIzaSyB317U7_q357AO3NMeBmUznWLuEdWCf0wU",
+  authDomain: "quesinator-f7538.firebaseapp.com",
+  databaseURL: "https://quesinator-f7538.firebaseio.com",
+  projectId: "quesinator-f7538",
+  storageBucket: "quesinator-f7538.appspot.com",
+  messagingSenderId: "24618923572"
+};
 @NgModule({
-  bootstrap: [ AppComponent ],
+  bootstrap: [AppComponent],
   declarations: [
     AppComponent,
-    AboutComponent,
-    HomeComponent,
-    NoContentComponent,
-    XLargeDirective
+    HomeComponent
   ],
   /**
    * Import Angular's modules.
@@ -63,22 +75,29 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules })
+    LoginPageModule,
+    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    BrowserAnimationsModule
+
   ],
   /**
    * Expose our Services and Providers into Angular's dependency injection.
    */
   providers: [
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    AuthService,
+    AuthGuard
   ]
 })
 export class AppModule {
 
-  constructor(
-    public appRef: ApplicationRef,
-    public appState: AppState
-  ) {}
+  constructor(public appRef: ApplicationRef,
+    public appState: AppState) {
+  }
 
   public hmrOnInit(store: StoreType) {
     if (!store || !store.state) {
@@ -116,7 +135,7 @@ export class AppModule {
     /**
      * Save input values
      */
-    store.restoreInputValues  = createInputTransfer();
+    store.restoreInputValues = createInputTransfer();
     /**
      * Remove styles
      */

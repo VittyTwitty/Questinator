@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "types": [
+      "firebase"
+    ],
     "target": "es5",
     "module": "es2015",
     "moduleResolution": "node",
@@ -17,7 +20,9 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@angular/*": ["node_modules/@angular/*"]
+      "@angular/*": [
+        "node_modules/@angular/*"
+      ]
     },
     "typeRoots": [
       "node_modules/@types"
