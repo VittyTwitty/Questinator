@@ -36,6 +36,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from "./core/auth.service";
 import { AuthGuard } from "./core/auth-guard.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MainService } from "./shared/main.service";
 
 
 
@@ -90,7 +91,8 @@ export const firebaseConfig = {
     ENV_PROVIDERS,
     APP_PROVIDERS,
     AuthService,
-    AuthGuard
+    AuthGuard,
+    MainService
   ]
 })
 export class AppModule {

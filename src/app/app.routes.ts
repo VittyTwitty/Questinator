@@ -8,12 +8,12 @@ export const ROUTES: Routes = [
   { 
     path: '',
     component: HomeComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
    },
   { 
     path: 'home',  
     component: HomeComponent,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   // { path: '**',    component: NoContentComponent },
 ];
